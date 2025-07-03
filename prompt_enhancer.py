@@ -1,29 +1,39 @@
-def enhance_prompt(user_query):
-    """Enhance analytics queries using user-specific terminology"""
-    # Get GA property name from session state if available
-    property_name = st.session_state.get('ga_property_name', 'your analytics')
-    
-    enhancement_map = {
-        "users": "activeUsers",
-        "traffic": "sessions",
-        "bounce": "bounceRate",
-        "device": "deviceCategory",
-        "country": "country",
-        "source": "sourceMedium",
-        "page": "pagePath",
-        "city": "city"
+def enhance_prompt(query):
+    """Transform queries into beginner-friendly analytics requests"""
+    # Simple mapping for common terms
+    term_map = {
+        "users": "number of visitors",
+        "traffic": "website visits",
+        "bounce": "visitors who left quickly",
+        "device": "device type (phone, computer, tablet)",
+        "country": "visitor location",
+        "source": "where visitors came from",
+        "page": "specific pages visited",
+        "sessions": "visits to your site",
+        "organic": "search engine traffic",
+        "direct": "people typing your URL",
+        "referral": "links from other sites"
     }
     
-    # Simple enhancement rules
-    enhanced = user_query.lower()
-    for term, replacement in enhancement_map.items():
-        enhanced = enhanced.replace(term, replacement)
+    # Explain technical terms
+    enhanced = query
+    for term, explanation in term_map.items():
+        if term in enhanced.lower():
+            enhanced = enhanced.replace(term, f"{term} ({explanation})")
     
-    # Add context if missing
-    if "date" not in enhanced:
+    # Add date context if missing
+    time_terms = ["yesterday", "week", "month", "year", "today", "ago"]
+    if not any(term in enhanced.lower() for term in time_terms):
         enhanced += " for the last 30 days"
     
-    if "chart" not in enhanced:
-        enhanced += ". Display results in a bar chart and table"
+    # Add visualization suggestion
+    if "chart" not in enhanced.lower() and "graph" not in enhanced.lower():
+        if " by " in enhanced:
+            enhanced += ". Show in an easy-to-understand bar chart"
+        else:
+            enhanced += ". Display in a simple table"
     
-    return f"Generate {property_name} report: {enhanced.capitalize()}"
+    # Add friendly explanation
+    enhanced += " - Please explain what this means in simple terms!"
+    
+    return enhanced
