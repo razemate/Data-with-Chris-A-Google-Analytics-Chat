@@ -1,0 +1,8 @@
+streamlit
+pandas
+openpyxl
+python-docx
+fpdf
+plotly
+google-analytics-data
+requests
