@@ -1,8 +1,8 @@
 streamlit
 pandas
-openpyxl
-python-docx
-fpdf
+openpyxl==3.1.2
+python-docx==0.8.11
+fpdf2==2.7.4
 plotly
-google-analytics-data
+google-analytics-data==0.17.0
 requests
